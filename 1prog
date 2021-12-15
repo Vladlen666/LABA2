@@ -1,0 +1,37 @@
+#define _CRT_SECURE_NO_WARNINGS 
+#include <stdlib.h> 
+#include <stdio.h> 
+int main(void)
+{
+  int m, j;
+  double max, min;
+  printf("kolihectvo elementov:");
+  scanf_s("%d", &m);
+  if (m <= 0)
+  {
+    printf("ERROR!!! m <= 0");
+    return 0;
+  }
+  printf("minimum: ");
+  scanf_s("%lf", &min);
+  printf("maximum: ");
+  scanf_s("%lf", &max);
+  if (min > max)
+  {
+    printf("ERROR!!! minimum > maximum");
+    return 0;
+  }
+  float* massiv1 = ((float*)malloc(m * sizeof(float) + 1));
+  for (j = 0; j < m; j++)
+  {
+    massiv1[j] = (((float)rand()) / RAND_MAX * (max - min) + min);
+  }
+  FILE* c = fopen("massiv1.txt", "w");
+  fprintf(c, "n = %d\n", m);
+  for (j = 0; j < m; j++)
+  {
+    fprintf(c, "%f\n", massiv1[j]);
+  }
+  fclose(c);
+  free(massiv1);
+}
