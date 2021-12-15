@@ -1,0 +1,198 @@
+#define _CRT_SECURE_NO_WARNINGS 
+#include <stdio.h> 
+#include <stdlib.h> 
+#include <time.h> 
+void scaner(FILE* c, int* m)
+{
+  fscanf(c, "n = %d\n", m);
+}
+
+void imas(int m, float* massiv1)
+{
+  int j;
+  for (j = 0; j < m; j++)
+  {
+	massiv1[j] = 0;
+  }
+}
+
+void scanermassiva(FILE* c, int m, float* massiv1)
+{
+  int j;
+  for (j = 0; j < m; j++)
+  {
+	fscanf(c, "%f\n", &massiv1[j]);
+  }
+}
+
+void printmas(int m, float* massiv1)
+{
+  int j;
+  for (j = 0; j < m; j++)
+  {
+	printf("%f\n", massiv1[j]);
+  }
+}
+
+void prisvoenie(float* massiv1, float* massiv2, int m)
+{
+  int j;
+  for (j = 0; j < m; j++)
+  {
+	massiv2[j] = massiv1[j];
+  }
+}
+
+void puzirec(int m, float* massiv1)
+{
+  int j, z;
+  float p;
+  for (j = 0; j < m; j++)
+  {
+	for (z = 0; z < m - j - 1; z++)
+	{
+	  if (massiv1[z] > massiv1[z + 1])
+	  {
+		p = massiv1[z];
+		massiv1[z] = massiv1[z + 1];
+		massiv1[z + 1] = p;
+	  }
+	}
+  }
+}
+
+void vstavki(int m, float* massiv1)
+{
+  int j, z;
+  float k;
+  for (j = 1; j < m; j++)
+  {
+	k = massiv1[j];
+	for (z = j - 1; z >= 0; z--)
+	{
+	  if (massiv1[z] < k)
+	  {
+		break;
+	  }
+	  else
+	  {
+		massiv1[z + 1] = massiv1[z];
+	  }
+	}
+	massiv1[z + 1] = k;
+  }
+}
+
+void qSort(float* massiv1, int l, int u)
+{
+  int i = l, j = u;
+  float t = 0;
+  float x = massiv1[(int)(l + u) / 2];
+  do
+  {
+	while (massiv1[i] < x)
+	  ++i;
+	while (massiv1[j] > x)
+	  --j;
+	if (i <= j)
+	{
+	  t = massiv1[i];
+	  massiv1[i] = massiv1[j];
+	  massiv1[j] = t;
+	  i++;
+	  j--;
+	}
+  } while (i < j);
+  if (l < j)
+  {
+	qSort(massiv1, l, j);
+  }
+  if (i < u)
+  {
+	qSort(massiv1, i, u);
+  }
+}
+
+void bistra(float* massiv1, int m)
+{
+  qSort(massiv1, 0, m - 1);
+
+}
+
+int main(void)
+{
+  int m, d = 0, y = 0;
+  FILE* c = fopen("C:\\Users\\titanpc\\source\\repos\\Project2\\Project2\\massiv1.txt", "r");
+  scaner(c, &m);
+  float* massiv1 = ((float*)malloc(m * sizeof(double)));
+  float* massiv2 = ((float*)malloc(m * sizeof(double)));
+  imas(m, massiv1);
+  imas(m, massiv2);
+  scanermassiva(c, m, massiv1);
+  prisvoenie(massiv1, massiv2, m);
+  printf("REGIM RABOTY\n");
+  printf("1  Pechat massiva\n");
+  printf("2  Sortirovka massiva\n");
+  printf("3  Sbros\n");
+  printf("4  Vyhod iz programmy\n");
+  while (d != 4)
+  {
+	scanf("%d", &d);
+	if (d == 1)
+	{
+	  printmas(m, massiv1);
+	}
+	else if (d == 2)
+	{
+	  printf("TIP SORTIROVKI\n");
+	  printf("1   puzirec\n");
+	  printf("2   vstavki\n");
+	  printf("3   bistra\n");
+	  while ((y != 1) && (y != 2) && (y != 3))
+	  {
+		scanf("%d", &y);
+		if (y == 1)
+		{
+		  clock_t t1 = clock();
+		  puzirec(m, massiv1);
+		  clock_t t2 = clock();
+		  printf("Vremy raboty sortirovki puzirec  %lf seconds\n", ((double)(t2 - t1)) / CLOCKS_PER_SEC);
+		}
+		else if (y == 2)
+		{
+		  clock_t t3 = clock();
+		  vstavki(m, massiv1);
+		  clock_t t4 = clock();
+	      printf("Vremy raboty sortirovki vstavki  %lf seconds\n", ((double)(t4 - t3)) / CLOCKS_PER_SEC);
+		}
+		else if (y == 3)
+		{
+		  clock_t t5 = clock();
+		  bistra(massiv1, m);
+		  clock_t t6 = clock();
+		  printf("Vremy raboty sortirovki bistra  %lf seconds\n", ((double)(t6 - t5)) / CLOCKS_PER_SEC);
+		}
+		else
+		{
+		  printf("Nevernoe znachenie\n");
+		}
+	  }
+	}
+	else if (d == 3)
+	{
+	  prisvoenie(massiv2, massiv1, m);
+	}
+	else if (d == 4)
+	{
+	  printf("Okonchanie raboty");
+	  return 0;
+	}
+	else
+	{
+	  printf("Vvedite vernoe znachenie\n");
+	}
+	y = 0;
+  }
+  free(massiv1);
+  free(massiv2);
+}
